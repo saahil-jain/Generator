@@ -279,7 +279,7 @@ sys_arguments = len(sys.argv)
 if sys_arguments>=2:
   image_name = str(sys.argv[1])
   if sys_arguments>=3:
-    iterations = str(sys.argv[2])
+    iterations = int(sys.argv[2])
 
 
 url = image_folder+'/'+image_name
