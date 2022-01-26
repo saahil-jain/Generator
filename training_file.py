@@ -328,5 +328,8 @@ for i in range(500+1):
     # export_model(ca, 'train_log/%04d'%step_i)
   print('\r step: %d, log10(loss): %.3f'%(len(loss_log), np.log10(loss)), end='')
   
+
+if not os.path.isdir("Models"):
+  os.mkdir("Models")
 os.mkdir("Models/"+letter_name[:-4])
 export_model(ca, 'Models/'+letter_name[:-4]+'/data')
