@@ -331,5 +331,6 @@ for i in range(500+1):
 
 if not os.path.isdir("Models"):
   os.mkdir("Models")
-os.mkdir("Models/"+image_name[:-4])
+if not os.path.isdir("Models/"+image_name[:-4]):
+  os.mkdir("Models/"+image_name[:-4])
 export_model(ca, 'Models/'+image_name[:-4]+'/data')
