@@ -272,8 +272,8 @@ def loss_f(x, pad_target):
   return tf.reduce_mean(tf.square(to_rgba(x)-pad_target), [-2, -3, -1])
 
 import sys
-image_folder = str(sys.argv[1])
-image_name = str(sys.argv[2])
+image_folder = "Images"
+image_name = str(sys.argv[1])
 
 url = image_folder+'/'+image_name
 target_img = load_image(url, 48)
