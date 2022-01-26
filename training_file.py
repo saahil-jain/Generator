@@ -272,10 +272,10 @@ def loss_f(x, pad_target):
   return tf.reduce_mean(tf.square(to_rgba(x)-pad_target), [-2, -3, -1])
 
 import sys
-letter_folder = str(sys.argv[1])
-letter_name = str(sys.argv[2])
+image_folder = str(sys.argv[1])
+image_name = str(sys.argv[2])
 
-url = letter_folder+'/'+letter_name
+url = image_folder+'/'+image_name
 target_img = load_image(url, 48)
 # imshow(zoom(to_rgb(target_img), 2), fmt='png')
 # imshow(target_img)
@@ -331,5 +331,5 @@ for i in range(500+1):
 
 if not os.path.isdir("Models"):
   os.mkdir("Models")
-os.mkdir("Models/"+letter_name[:-4])
-export_model(ca, 'Models/'+letter_name[:-4]+'/data')
+os.mkdir("Models/"+image_name[:-4])
+export_model(ca, 'Models/'+image_name[:-4]+'/data')
