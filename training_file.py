@@ -323,7 +323,7 @@ for i in range(500+1):
   #   generate_pool_figures(pool, step_i)
   if step_i%100 == 0:
     clear_output()
-    # visualize_batch(x0, x, step_i)
+    visualize_batch(x0, x, step_i)
     # plot_loss(loss_log)
     # export_model(ca, 'train_log/%04d'%step_i)
   print('\r step: %d, log10(loss): %.3f'%(len(loss_log), np.log10(loss)), end='')
