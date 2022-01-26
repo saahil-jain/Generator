@@ -273,7 +273,14 @@ def loss_f(x, pad_target):
 
 import sys
 image_folder = "Images"
-image_name = str(sys.argv[1])
+image_name = "001"
+iterations = 1000
+sys_arguments = len(sys.argv)
+if sys_arguments>=2:
+  image_name = str(sys.argv[1])
+  if sys_arguments>=3:
+    iterations = str(sys.argv[2])
+
 
 url = image_folder+'/'+image_name
 target_img = load_image(url, 48)
@@ -301,7 +308,7 @@ trainer = tf.keras.optimizers.Adam(lr_sched)
 loss0 = loss_f(seed, pad_target).numpy()
 pool = SamplePool(x=np.repeat(seed[None, ...], POOL_SIZE, 0))
 
-for i in range(500+1):
+for i in range(iterations+1):
   if USE_PATTERN_POOL:
     batch = pool.sample(BATCH_SIZE)
     x0 = batch.x
