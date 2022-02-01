@@ -22,7 +22,7 @@ clear_output()
 
 CHANNEL_N = 16        # Number of CA state channels
 TARGET_PADDING = 16   # Number of pixels used to pad the target image border
-TARGET_SIZE = 40
+TARGET_SIZE = 80
 BATCH_SIZE = 8
 POOL_SIZE = 1024
 CELL_FIRE_RATE = 0.5
@@ -283,7 +283,7 @@ if sys_arguments>=2:
 
 
 url = image_folder+'/'+image_name
-target_img = load_image(url, 48)
+target_img = load_image(url, TARGET_SIZE)
 # imshow(zoom(to_rgb(target_img), 2), fmt='png')
 # imshow(target_img)
 
