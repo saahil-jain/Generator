@@ -10,10 +10,12 @@ import tensorflow as tf
 import numpy as np
 import requests
 import zipfile
+import shutil
 import base64
 import tqdm
 import json
 import glob
+import sys
 import os
 import io
 
@@ -26,7 +28,7 @@ TARGET_SIZE = 80
 BATCH_SIZE = 8
 POOL_SIZE = 1024
 CELL_FIRE_RATE = 0.5
-EXPERIMENT_TYPE = "Regenerating" 
+EXPERIMENT_TYPE = "Growing" 
 EXPERIMENT_MAP = {"Growing":0, "Persistent":1, "Regenerating":2}
 EXPERIMENT_N = EXPERIMENT_MAP[EXPERIMENT_TYPE]
 USE_PATTERN_POOL = [0, 1, 1][EXPERIMENT_N]
@@ -271,9 +273,35 @@ def train_step(x, pad_target):
 def loss_f(x, pad_target):
   return tf.reduce_mean(tf.square(to_rgba(x)-pad_target), [-2, -3, -1])
 
-import sys
+def creator(model_name, letter):
+  models = []
+
+  ca1 = CAModel()
+  ca1.load_weights(model_name)
+
+  models.append(ca1)
+
+  if not os.path.isdir("Videos"):
+    os.mkdir("Videos")
+  out_fn = "Videos/" + letter + ".mp4"
+  window_dimention = int(TARGET_SIZE * 1.5)
+  x = np.zeros([len(models), window_dimention, window_dimention, CHANNEL_N], np.float32)
+  x[..., window_dimention//2, window_dimention//2, 3:] = 1.0
+
+  with VideoWriter(out_fn) as vid:
+    gif = []
+    for i in tqdm.trange(100):
+      vis = np.hstack(to_rgb(x))
+      gif.append(vis)
+      vid.add(zoom(vis, 2))
+      for ca, xk in zip(models, x):
+        xk[:] = ca(xk[None,...])[0]
+    for vis in gif[-1::-1]:
+      vid.add(zoom(vis, 2))
+  mvp.ipython_display(out_fn)
+
 image_folder = "Images"
-image_name = "001"
+image_name = "001.png"
 iterations = 1000
 sys_arguments = len(sys.argv)
 if sys_arguments>=2:
@@ -287,7 +315,6 @@ target_img = load_image(url, TARGET_SIZE)
 # imshow(zoom(to_rgb(target_img), 2), fmt='png')
 # imshow(target_img)
 
-import shutil
 if os.path.isdir("train_log"):
   shutil.rmtree("train_log") 
 os.mkdir("train_log")
@@ -335,9 +362,14 @@ for i in range(iterations+1):
     # export_model(ca, 'train_log/%04d'%step_i)
   print('\r step: %d, log10(loss): %.3f'%(len(loss_log), np.log10(loss)), end='')
   
-
+image = image_name[:-4]
 if not os.path.isdir("Models"):
   os.mkdir("Models")
-if not os.path.isdir("Models/"+image_name[:-4]):
-  os.mkdir("Models/"+image_name[:-4])
-export_model(ca, 'Models/'+image_name[:-4]+'/data')
+if not os.path.isdir("Models/"+image):
+  os.mkdir("Models/"+image)
+export_model(ca, 'Models/'+image+'/data')
+
+model_name =  "Models/" + image + '/data'
+dx = np.outer([1.0, 2.0, 1.0], [-1, 0, 1])
+creator(model_name, image)
+# mvp.ipython_display("Videos"+"/" + image +".mp4")
