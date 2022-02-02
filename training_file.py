@@ -301,7 +301,7 @@ def creator(model_name, letter):
   mvp.ipython_display(out_fn)
 
 image_folder = "Images"
-image_name = "001.png"
+image_name = "676.png"
 iterations = 1000
 sys_arguments = len(sys.argv)
 if sys_arguments>=2:
