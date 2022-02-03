@@ -324,7 +324,8 @@ pad_target = tf.pad(target_img, [(p, p), (p, p), (0, 0)])
 h, w = pad_target.shape[:2]
 
 seed = np.zeros([h, w, CHANNEL_N], np.float32)
-seed[h//2, w//2, 3:] = 1.0
+# seed[h//2, w//2, 3:] = 1.0
+seed[h//2, (w*3)//5, 3:] = 1.0
 
 
 ca = CAModel()
